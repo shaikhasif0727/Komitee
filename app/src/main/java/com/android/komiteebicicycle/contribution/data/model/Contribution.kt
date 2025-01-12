@@ -10,5 +10,6 @@ data class Contribution(
     val memberId: Int,
     val month: String, // Format: YYYY-MM
     val paymentMethod: String? = null, // "Cash" or "Online"
-    val isPaid: Boolean = false
+    val isPaid: Boolean = false,
+    val amount: Double // Amount to be paid by the member
 )

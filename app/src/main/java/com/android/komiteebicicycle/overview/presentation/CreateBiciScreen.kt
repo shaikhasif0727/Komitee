@@ -14,6 +14,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -24,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,10 +38,16 @@ internal fun CreateBiciScreenRoot(
     viewModel: BiciViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadMembers()
+    }
+
     CreateBiciScreen(
         state = state,
         onAction = viewModel::setEvent
     )
+
 }
 
 @Composable
@@ -49,8 +55,8 @@ private fun CreateBiciScreen(
     state: BiciContract.State,
     onAction: (BiciContract.Event) -> Unit
 ) {
-    var title by remember { mutableStateOf(TextFieldValue()) }
-    var totalAmount by remember { mutableStateOf(TextFieldValue()) }
+    var title by rememberSaveable { mutableStateOf("") }
+    var totalAmount by rememberSaveable { mutableStateOf("") }
     var startDate by rememberSaveable { mutableStateOf("") }
     var endDate by rememberSaveable { mutableStateOf("") }
     val selectedMembers = remember { mutableStateListOf<Member>() }
@@ -77,7 +83,7 @@ private fun CreateBiciScreen(
                 Box(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (title.text.isEmpty()) {
+                    if (title.isEmpty()) {
                         Text("Enter Bici Title", style = MaterialTheme.typography.bodyMedium)
                     }
                     innerTextField()
@@ -94,7 +100,7 @@ private fun CreateBiciScreen(
                 Box(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (totalAmount.text.isEmpty()) {
+                    if (totalAmount.isEmpty()) {
                         Text("Enter Total Amount", style = MaterialTheme.typography.bodyMedium)
                     }
                     innerTextField()
@@ -142,9 +148,9 @@ private fun CreateBiciScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = selectedMembers.contains(member),
+                        checked = state.selectedMembers.contains(member),
                         onCheckedChange = { isChecked ->
-                            if (isChecked) selectedMembers.add(member) else selectedMembers.remove(member)
+                            onAction.invoke(BiciContract.Event.OnMemberSelected(member))
                         }
                     )
                     Text(text = member.name, style = MaterialTheme.typography.bodyLarge)
@@ -167,12 +173,23 @@ private fun CreateBiciScreen(
 
         // Create Bici Button
         Button(onClick = {
-            val total = totalAmount.text.toDoubleOrNull()
+            val total = totalAmount.toDoubleOrNull()
             val start = parseDate(startDate)
             val end = parseDate(endDate)
 
-            if (!title.text.isEmpty() && total != null && selectedMembers.isNotEmpty() && start != null && end != null && end.after(start)) {
-                onAction.invoke(BiciContract.Event.addBici(title.text, total, startDate, endDate,selectedMembers.toList()))
+            if (!title.isEmpty() && total != null && state.selectedMembers.isNotEmpty() && start != null && end != null && end.after(
+                    start
+                )
+            ) {
+                onAction.invoke(
+                    BiciContract.Event.addBici(
+                        title,
+                        total,
+                        startDate,
+                        endDate,
+                        state.selectedMembers
+                    )
+                )
                 onAction.invoke(BiciContract.Event.OnBack)
             } else {
                 // Validation feedback can be added here

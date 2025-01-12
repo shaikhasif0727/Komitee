@@ -40,6 +40,9 @@ class BiciDetailsViewModel @Inject constructor(
 
             if (details != null) {
                 val months = getMonthsForBici(details.bici.startDate, details.bici.endDate)
+                val memberCount = details.members.size
+                val amountPerMember = details.bici.totalAmount / memberCount
+
                 months.forEach { month ->
                     val contributions = contributionDao.getContributionsByBiciAndMonth(biciId, month)
                     _contributionsByMonth[month] = contributions.ifEmpty {
@@ -48,7 +51,8 @@ class BiciDetailsViewModel @Inject constructor(
                             Contribution(
                                 biciId = biciId,
                                 memberId = member.memberId,
-                                month = month
+                                month = month,
+                                amount = amountPerMember
                             )
                         }
                         newContributions.forEach { contributionDao.insertContribution(it) }

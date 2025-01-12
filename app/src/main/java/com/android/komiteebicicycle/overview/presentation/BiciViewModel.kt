@@ -30,19 +30,34 @@ class BiciViewModel @Inject constructor(
     private fun getBiciWithMembers() {
         viewModelScope.launch {
             val biciList = biciDao.getAllBiciWithMembers()
-            val memberList = memberDao.getAllMembers()
-
             setState {
                 copy(
                     biciList = biciList,
-                    members = memberList
                 )
             }
 
         }
     }
 
-    fun addBici(title: String, totalAmount: Double, startDate: String, endDate: String,members: List<Member>) {
+    fun loadMembers() {
+        viewModelScope.launch {
+            val memberList = memberDao.getAllMembers()
+
+            setState {
+                copy(
+                    members = memberList
+                )
+            }
+        }
+    }
+
+    fun addBici(
+        title: String,
+        totalAmount: Double,
+        startDate: String,
+        endDate: String,
+        members: List<Member>
+    ) {
         viewModelScope.launch {
             val newBici = Bici(
                 title = title,
@@ -90,7 +105,7 @@ class BiciViewModel @Inject constructor(
                 }
             }
 
-            BiciContract.Event.NavigateToAddMember ->{
+            BiciContract.Event.NavigateToAddMember -> {
                 viewModelScope.launch {
                     navigator.navigate(Destination.AddMemberScreen)
                 }
@@ -101,6 +116,16 @@ class BiciViewModel @Inject constructor(
                     navigator.navigate(Destination.BiciDetailsScreen(event.biciId))
                 }
             }
+
+            is BiciContract.Event.OnMemberSelected -> {
+                setState {
+                    copy(
+                        selectedMembers = currentState.selectedMembers.toMutableList().apply {
+                            if (contains(event.member)) remove(event.member) else add(event.member)
+                        }
+                    )
+                }
+            }
         }
     }
 }
@@ -109,10 +134,12 @@ class BiciContract {
 
     sealed class Event : UiEvent {
 
-        object OnCreateBici: Event()
+        object OnCreateBici : Event()
         object OnBack : Event()
         object NavigateToAddMember : Event()
         data class NavigateToDetails(val biciId: Int) : Event()
+
+        data class OnMemberSelected(val member: Member) : Event()
 
         data class addBici(
             val title: String,
@@ -125,7 +152,8 @@ class BiciContract {
 
     data class State(
         val biciList: List<BiciWithMembers> = listOf(),
-        val members: List<Member> = listOf()
+        val members: List<Member> = listOf(),
+        val selectedMembers: List<Member> = listOf()
     ) : UiState
 
     sealed class Effect : UiEffect

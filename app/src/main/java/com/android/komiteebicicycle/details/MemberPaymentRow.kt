@@ -2,6 +2,7 @@ package com.android.komiteebicicycle.details
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,11 +44,15 @@ fun MemberPaymentRow(
                 .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = member.name,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f)
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = "Member ID: ${contribution.memberId}\n${member.name}", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Amount: ₹${contribution.amount}", style = MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = if (contribution.isPaid) "Paid (${contribution.paymentMethod})" else "Not Paid",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (contribution.isPaid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                )
+            }
 
             // Payment Method Dropdown
             Box(modifier = Modifier.wrapContentSize()) {
