@@ -1,4 +1,4 @@
-package com.android.komiteebicicycle.presentation.home
+package com.android.komiteebicicycle.home.presentation.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -10,14 +10,27 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.android.komiteebicicycle.home.data.model.Member
 
 @Composable
-fun HomeScreen(
-    members: List<Member>,
-    onAddMember: (String) -> Unit,
-    onNavigateToContributions: () -> Unit,
-    onNavigateToDraw: () -> Unit,
-    onNavigateToHistory: () -> Unit
+internal fun HomeScreenRoot(
+    viewModel: HomeViewModel = hiltViewModel(),
+) {
+
+    val state by viewModel.uiState.collectAsState()
+
+    HomeScreen(
+        state = state,
+        onAction = viewModel::setEvent
+    )
+}
+
+@Composable
+private fun HomeScreen(
+    state: HomeContract.State,
+    onAction: (HomeContract.Event) -> Unit
 ) {
     var newMemberName by remember { mutableStateOf(TextFieldValue()) }
 
@@ -56,7 +69,7 @@ fun HomeScreen(
 
             Button(onClick = {
                 if (newMemberName.text.isNotEmpty()) {
-                    onAddMember(newMemberName.text)
+                    onAction.invoke(HomeContract.Event.AddMember(newMemberName.text))
                     newMemberName = TextFieldValue()
                 }
             }) {
@@ -72,7 +85,7 @@ fun HomeScreen(
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            members.forEach { member ->
+            state.members.forEach { member ->
                 Text(
                     text = "\u2022 ${member.name}",
                     style = MaterialTheme.typography.bodyLarge
@@ -84,21 +97,26 @@ fun HomeScreen(
 
         // Navigation Buttons
         Button(
-            onClick = onNavigateToContributions,
+            onClick = {
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("View Contributions")
         }
 
         Button(
-            onClick = onNavigateToDraw,
+            onClick = {
+                onAction.invoke(HomeContract.Event.onNavigateToDraw)
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Perform Draw")
         }
 
         Button(
-            onClick = onNavigateToHistory,
+            onClick = {
+                onAction.invoke(HomeContract.Event.onNavigateToHistory)
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("View History")
@@ -106,21 +124,12 @@ fun HomeScreen(
     }
 }
 
-// Dummy Member Class for Preview
-data class Member(val id: Int, val name: String)
-
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun HomeScreenPreview() {
+private fun HomeScreenPreview() {
     HomeScreen(
-        members = listOf(
-            Member(1, "John Doe"),
-            Member(2, "Jane Smith"),
-            Member(3, "Alex Johnson")
-        ),
-        onAddMember = {},
-        onNavigateToContributions = {},
-        onNavigateToDraw = {},
-        onNavigateToHistory = {}
+        state = HomeContract.State(),
+        onAction = {}
     )
 }
+
