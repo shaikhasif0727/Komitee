@@ -6,7 +6,9 @@ import androidx.room.PrimaryKey
 @Entity
 data class Contribution(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val biciId: Int,
     val memberId: Int,
-    val amount: Double,
-    val date: String
+    val month: String, // Format: YYYY-MM
+    val paymentMethod: String? = null, // "Cash" or "Online"
+    val isPaid: Boolean = false
 )

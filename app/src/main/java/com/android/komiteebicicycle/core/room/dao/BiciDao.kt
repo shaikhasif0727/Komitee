@@ -18,4 +18,8 @@ interface BiciDao {
     @Transaction
     @Query("SELECT * FROM Bici")
     suspend fun getAllBiciWithMembers(): List<BiciWithMembers>
+
+    @Transaction
+    @Query("SELECT * FROM Bici WHERE biciId = :biciId")
+    suspend fun getBiciWithMembers(biciId: Int): BiciWithMembers?
 }

@@ -136,7 +136,7 @@ private fun ContributionScreen(
                 val memberName =
                     state.members.firstOrNull { it.memberId == contribution.memberId }?.name ?: "Unknown"
                 Text(
-                    text = "\u2022 $memberName: \$${contribution.amount} on ${contribution.date}",
+                    text = "\u2022 $memberName: \$${contribution/*.amount*/} on ${contribution/*.date*/}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

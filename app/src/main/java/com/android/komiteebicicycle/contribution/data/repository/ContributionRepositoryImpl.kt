@@ -13,7 +13,7 @@ class ContributionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getContributions(): Result<List<Contribution>> {
-       return Result.success(contributionDao.getAllContributions())
+       return Result.success(contributionDao.getContributionsByBiciAndMonth(0,"january"))
     }
 
 }

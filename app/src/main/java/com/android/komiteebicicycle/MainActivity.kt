@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.android.komiteebicicycle.contribution.presentation.ContributionScreenRoot
 import com.android.komiteebicicycle.core.naviagtion.Destination
 import com.android.komiteebicicycle.member.presentation.MemberScreenRoot
@@ -21,6 +22,7 @@ import com.android.komiteebicicycle.core.naviagtion.NavigationAction
 import com.android.komiteebicicycle.core.naviagtion.Navigator
 import com.android.komiteebicicycle.core.naviagtion.ObserverAsEvent
 import com.android.komiteebicicycle.core.paresantation.utils.shareViewModel
+import com.android.komiteebicicycle.details.BiciDetailsScreen
 import com.android.komiteebicicycle.overview.data.model.Bici
 import com.android.komiteebicicycle.overview.presentation.BiciViewModel
 import com.android.komiteebicicycle.overview.presentation.CreateBiciScreenRoot
@@ -78,6 +80,13 @@ class MainActivity : ComponentActivity() {
                                     backStackEntry.shareViewModel(navController = navController)
 
                                 CreateBiciScreenRoot(biciViewModel)
+                            }
+
+                            composable<Destination.BiciDetailsScreen>(){ backStackEntry ->
+                                val arg = backStackEntry.toRoute<Destination.BiciDetailsScreen>()
+                                val biciId = arg.biciId
+                                BiciDetailsScreen(biciId = biciId)
+
                             }
 
                             composable<Destination.AddMemberScreen> {

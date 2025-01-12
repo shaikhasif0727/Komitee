@@ -16,5 +16,8 @@ sealed interface Destination {
     data object AddMemberScreen : Destination
 
     @Serializable
+    data class BiciDetailsScreen(val biciId:Int) : Destination
+
+    @Serializable
     data object ContributionScreen : Destination
 }

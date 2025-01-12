@@ -95,6 +95,12 @@ class BiciViewModel @Inject constructor(
                     navigator.navigate(Destination.AddMemberScreen)
                 }
             }
+
+            is BiciContract.Event.NavigateToDetails -> {
+                viewModelScope.launch {
+                    navigator.navigate(Destination.BiciDetailsScreen(event.biciId))
+                }
+            }
         }
     }
 }
@@ -106,6 +112,7 @@ class BiciContract {
         object OnCreateBici: Event()
         object OnBack : Event()
         object NavigateToAddMember : Event()
+        data class NavigateToDetails(val biciId: Int) : Event()
 
         data class addBici(
             val title: String,

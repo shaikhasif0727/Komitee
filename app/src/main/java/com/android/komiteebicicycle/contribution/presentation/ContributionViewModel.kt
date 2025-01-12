@@ -52,13 +52,13 @@ internal class ContributionViewModel @Inject constructor(
 
             is ContributionContract.Event.AddContribution ->{
                 viewModelScope.launch {
-                    val newContribution = Contribution(memberId = event.memberId, amount = event.amount, date = event.date)
-                    contributionRepository.addContribution(newContribution)
-                    setState {
-                        copy(
-                            contributions = contributions + listOf(newContribution)
-                        )
-                    }
+//                    val newContribution = Contribution(memberId = event.memberId, amount = event.amount, date = event.date)
+//                    contributionRepository.addContribution(newContribution)
+//                    setState {
+//                        copy(
+//                            contributions = contributions + listOf(newContribution)
+//                        )
+//                    }
                 }
 
             }
