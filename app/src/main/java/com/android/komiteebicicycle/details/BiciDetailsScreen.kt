@@ -13,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -80,7 +81,7 @@ fun BiciDetailsScreen(
 
                 // Tabs for Months
                 val months = viewModel.getMonthsForBici(biciWithMembers.bici.startDate, biciWithMembers.bici.endDate)
-                TabRow(selectedTabIndex = currentMonthIndex.value) {
+                ScrollableTabRow(selectedTabIndex = currentMonthIndex.value) {
                     months.forEachIndexed { index, month ->
                         Tab(
                             selected = currentMonthIndex.value == index,
