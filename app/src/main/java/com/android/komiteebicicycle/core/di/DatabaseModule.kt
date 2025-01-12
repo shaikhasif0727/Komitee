@@ -2,9 +2,10 @@ package com.android.komiteebicicycle.core.di
 
 import android.content.Context
 import androidx.room.Room
-import com.android.komiteebicicycle.core.data.room.AppDatabase
-import com.android.komiteebicicycle.core.data.room.dao.ContributionDao
-import com.android.komiteebicicycle.core.data.room.dao.MemberDao
+import com.android.komiteebicicycle.core.room.AppDatabase
+import com.android.komiteebicicycle.core.room.dao.BiciDao
+import com.android.komiteebicicycle.core.room.dao.ContributionDao
+import com.android.komiteebicicycle.core.room.dao.MemberDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,6 +35,11 @@ object DatabaseModule {
     @Provides
     fun provideContributionDao(database: AppDatabase): ContributionDao {
         return database.contributionDao()
+    }
+
+    @Provides
+    fun provideBiciDao(database: AppDatabase): BiciDao {
+        return database.BiciDao()
     }
 
 }

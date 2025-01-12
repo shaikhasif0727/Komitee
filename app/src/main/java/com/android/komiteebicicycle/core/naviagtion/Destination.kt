@@ -4,10 +4,16 @@ import kotlinx.serialization.Serializable
 
 sealed interface Destination {
     @Serializable
-    data object HomeGraph : Destination
+    data object OverviewGraph : Destination
 
     @Serializable
-    data object HomeScreen : Destination
+    data object OverviewScreen : Destination
+
+    @Serializable
+    data object CreateBiciScreen : Destination
+
+    @Serializable
+    data object AddMemberScreen : Destination
 
     @Serializable
     data object ContributionScreen : Destination

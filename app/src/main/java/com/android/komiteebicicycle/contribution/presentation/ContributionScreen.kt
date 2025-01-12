@@ -134,7 +134,7 @@ private fun ContributionScreen(
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             state.contributions.forEach { contribution ->
                 val memberName =
-                    state.members.firstOrNull { it.id == contribution.memberId }?.name ?: "Unknown"
+                    state.members.firstOrNull { it.memberId == contribution.memberId }?.name ?: "Unknown"
                 Text(
                     text = "\u2022 $memberName: \$${contribution.amount} on ${contribution.date}",
                     style = MaterialTheme.typography.bodyLarge
@@ -161,7 +161,7 @@ private fun ContributionScreen(
             DropdownMenuItem(text = {
                 Text(text = member.name)
             }, onClick = {
-                selectedMemberId = member.id
+                selectedMemberId = member.memberId
                 openSelectMember = false
             })
         }

@@ -16,7 +16,7 @@ object NavigationModule {
     @Singleton
     @Provides
     fun provideNavigator(): Navigator {
-        return DefaultNavigator(Destination.HomeGraph)
+        return DefaultNavigator(Destination.OverviewGraph)
     }
 
 }

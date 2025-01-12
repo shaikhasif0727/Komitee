@@ -1,4 +1,4 @@
-package com.android.komiteebicicycle.home.presentation
+package com.android.komiteebicicycle.member.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -13,22 +13,22 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-internal fun HomeScreenRoot(
-    viewModel: HomeViewModel = hiltViewModel(),
+internal fun MemberScreenRoot(
+    viewModel: MemberViewModel = hiltViewModel(),
 ) {
 
     val state by viewModel.uiState.collectAsState()
 
-    HomeScreen(
+    MemberScreen(
         state = state,
         onAction = viewModel::setEvent
     )
 }
 
 @Composable
-private fun HomeScreen(
-    state: HomeContract.State,
-    onAction: (HomeContract.Event) -> Unit
+private fun MemberScreen(
+    state: MemberContract.State,
+    onAction: (MemberContract.Event) -> Unit
 ) {
     var newMemberName by remember { mutableStateOf(TextFieldValue()) }
 
@@ -67,7 +67,7 @@ private fun HomeScreen(
 
             Button(onClick = {
                 if (newMemberName.text.isNotEmpty()) {
-                    onAction.invoke(HomeContract.Event.AddMember(newMemberName.text))
+                    onAction.invoke(MemberContract.Event.AddMember(newMemberName.text))
                     newMemberName = TextFieldValue()
                 }
             }) {
@@ -96,7 +96,7 @@ private fun HomeScreen(
         // Navigation Buttons
         Button(
             onClick = {
-                onAction.invoke(HomeContract.Event.onNavigateToContributions)
+                onAction.invoke(MemberContract.Event.onNavigateToContributions)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -105,7 +105,7 @@ private fun HomeScreen(
 
         Button(
             onClick = {
-                onAction.invoke(HomeContract.Event.onNavigateToDraw)
+                onAction.invoke(MemberContract.Event.onNavigateToDraw)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -114,7 +114,7 @@ private fun HomeScreen(
 
         Button(
             onClick = {
-                onAction.invoke(HomeContract.Event.onNavigateToHistory)
+                onAction.invoke(MemberContract.Event.onNavigateToHistory)
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -125,9 +125,9 @@ private fun HomeScreen(
 
 @Preview
 @Composable
-private fun HomeScreenPreview() {
-    HomeScreen(
-        state = HomeContract.State(),
+private fun MemberScreenPreview() {
+    MemberScreen(
+        state = MemberContract.State(),
         onAction = {}
     )
 }

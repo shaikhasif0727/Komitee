@@ -1,8 +1,8 @@
-package com.android.komiteebicicycle.home.data.repository
+package com.android.komiteebicicycle.member.data.repository
 
-import com.android.komiteebicicycle.home.data.model.Member
-import com.android.komiteebicicycle.core.data.room.dao.MemberDao
-import com.android.komiteebicicycle.home.domain.repository.HomeRepository
+import com.android.komiteebicicycle.member.data.model.Member
+import com.android.komiteebicicycle.core.room.dao.MemberDao
+import com.android.komiteebicicycle.member.domain.repository.HomeRepository
 import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(

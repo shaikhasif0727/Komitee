@@ -1,4 +1,4 @@
-package com.android.komiteebicicycle.core.data.room.dao
+package com.android.komiteebicicycle.core.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,9 +1,9 @@
-package com.android.komiteebicicycle.core.data.room.dao
+package com.android.komiteebicicycle.core.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.android.komiteebicicycle.home.data.model.Member
+import com.android.komiteebicicycle.member.data.model.Member
 
 @Dao
 interface MemberDao {

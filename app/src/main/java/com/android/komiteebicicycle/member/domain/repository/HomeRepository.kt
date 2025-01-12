@@ -1,6 +1,6 @@
-package com.android.komiteebicicycle.home.domain.repository
+package com.android.komiteebicicycle.member.domain.repository
 
-import com.android.komiteebicicycle.home.data.model.Member
+import com.android.komiteebicicycle.member.data.model.Member
 
 interface HomeRepository {
 

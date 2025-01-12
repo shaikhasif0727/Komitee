@@ -1,9 +1,9 @@
-package com.android.komiteebicicycle.home.presentation
+package com.android.komiteebicicycle.member.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.android.komiteebicicycle.core.naviagtion.Destination
-import com.android.komiteebicicycle.home.data.model.Member
-import com.android.komiteebicicycle.home.domain.repository.HomeRepository
+import com.android.komiteebicicycle.member.data.model.Member
+import com.android.komiteebicicycle.member.domain.repository.HomeRepository
 import com.android.komiteebicicycle.core.naviagtion.Navigator
 import com.si.f1.f1predictor.core.common.BaseViewModel
 import com.si.f1.f1predictor.core.common.UiEffect
@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class MemberViewModel @Inject constructor(
     private val homeRepository: HomeRepository,
     private val navigator: Navigator
-) : BaseViewModel<HomeContract.Event, HomeContract.State, HomeContract.Effect>() {
+) : BaseViewModel<MemberContract.Event, MemberContract.State, MemberContract.Effect>() {
 
     override fun loadInitialValue() {
         viewModelScope.launch {
@@ -32,13 +32,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun createInitialState(): HomeContract.State {
-        return HomeContract.State()
+    override fun createInitialState(): MemberContract.State {
+        return MemberContract.State()
     }
 
-    override fun handleEvent(event: HomeContract.Event) {
+    override fun handleEvent(event: MemberContract.Event) {
         when (event) {
-            is HomeContract.Event.AddMember -> {
+            is MemberContract.Event.AddMember -> {
                 viewModelScope.launch {
                     val newMember = Member(name = event.name)
                     homeRepository.addMember(newMember)
@@ -50,17 +50,17 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            HomeContract.Event.onNavigateToContributions -> {
+            MemberContract.Event.onNavigateToContributions -> {
                 viewModelScope.launch {
                     navigator.navigate(Destination.ContributionScreen)
                 }
             }
 
-            HomeContract.Event.onNavigateToDraw -> {
+            MemberContract.Event.onNavigateToDraw -> {
 
             }
 
-            HomeContract.Event.onNavigateToHistory -> {
+            MemberContract.Event.onNavigateToHistory -> {
 
             }
 
@@ -69,7 +69,7 @@ class HomeViewModel @Inject constructor(
     }
 }
 
-class HomeContract {
+class MemberContract {
 
     sealed class Event : UiEvent {
         data class AddMember(val name: String) : Event()

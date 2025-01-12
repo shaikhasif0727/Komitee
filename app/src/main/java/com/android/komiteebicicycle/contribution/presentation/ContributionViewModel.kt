@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.android.komiteebicicycle.contribution.data.model.Contribution
 import com.android.komiteebicicycle.contribution.domain.repository.ContributionRepository
 import com.android.komiteebicicycle.core.naviagtion.Navigator
-import com.android.komiteebicicycle.home.data.model.Member
-import com.android.komiteebicicycle.home.domain.repository.HomeRepository
+import com.android.komiteebicicycle.member.data.model.Member
+import com.android.komiteebicicycle.member.domain.repository.HomeRepository
 import com.si.f1.f1predictor.core.common.BaseViewModel
 import com.si.f1.f1predictor.core.common.UiEffect
 import com.si.f1.f1predictor.core.common.UiEvent
@@ -86,7 +86,7 @@ internal class ContributionContract {
         val members: List<Member> = listOf()
     ) : UiState {
 
-        fun getMemberName(id:Int?) = members.find { it.id == id }?.name
+        fun getMemberName(id:Int?) = members.find { it.memberId == id }?.name
 
 
     }

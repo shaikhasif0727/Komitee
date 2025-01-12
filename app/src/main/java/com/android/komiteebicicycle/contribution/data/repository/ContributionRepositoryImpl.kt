@@ -2,7 +2,7 @@ package com.android.komiteebicicycle.contribution.data.repository
 
 import com.android.komiteebicicycle.contribution.data.model.Contribution
 import com.android.komiteebicicycle.contribution.domain.repository.ContributionRepository
-import com.android.komiteebicicycle.core.data.room.dao.ContributionDao
+import com.android.komiteebicicycle.core.room.dao.ContributionDao
 import javax.inject.Inject
 
 class ContributionRepositoryImpl @Inject constructor(
