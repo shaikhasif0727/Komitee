@@ -1,4 +1,4 @@
-package com.android.komiteebicicycle.home.presentation.home
+package com.android.komiteebicicycle.home.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -11,8 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.android.komiteebicicycle.home.data.model.Member
 
 @Composable
 internal fun HomeScreenRoot(
@@ -98,6 +96,7 @@ private fun HomeScreen(
         // Navigation Buttons
         Button(
             onClick = {
+                onAction.invoke(HomeContract.Event.onNavigateToContributions)
             },
             modifier = Modifier.fillMaxWidth()
         ) {

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.dagger.hilt)
 //    alias(libs.plugins.ksp)
     id("kotlin-kapt")
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
@@ -74,6 +75,10 @@ dependencies {
     // Room Database
     implementation(libs.room)
     kapt(libs.room.compiler)
+
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

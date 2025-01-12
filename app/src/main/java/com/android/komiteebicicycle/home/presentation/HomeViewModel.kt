@@ -1,8 +1,10 @@
-package com.android.komiteebicicycle.home.presentation.home
+package com.android.komiteebicicycle.home.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.android.komiteebicicycle.core.naviagtion.Destination
 import com.android.komiteebicicycle.home.data.model.Member
 import com.android.komiteebicicycle.home.domain.repository.HomeRepository
+import com.android.komiteebicicycle.core.naviagtion.Navigator
 import com.si.f1.f1predictor.core.common.BaseViewModel
 import com.si.f1.f1predictor.core.common.UiEffect
 import com.si.f1.f1predictor.core.common.UiEvent
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val navigator: Navigator
 ) : BaseViewModel<HomeContract.Event, HomeContract.State, HomeContract.Effect>() {
 
     override fun loadInitialValue() {
@@ -48,7 +51,9 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeContract.Event.onNavigateToContributions -> {
-
+                viewModelScope.launch {
+                    navigator.navigate(Destination.ContributionScreen)
+                }
             }
 
             HomeContract.Event.onNavigateToDraw -> {
