@@ -30,3 +30,19 @@ fun showDatePickerDialog(context: Context, onDateSelected: (String) -> Unit) {
         calendar.get(Calendar.DAY_OF_MONTH)
     ).show()
 }
+
+fun getMonthsForBici(startDate: String, endDate: String): List<String> {
+    val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
+    val start = dateFormat.parse(startDate)
+    val end = dateFormat.parse(endDate)
+
+    val calendar = Calendar.getInstance()
+    calendar.time = start
+
+    val months = mutableListOf<String>()
+    while (calendar.time.before(end) || calendar.time == end) {
+        months.add(dateFormat.format(calendar.time))
+        calendar.add(Calendar.MONTH, 1)
+    }
+    return months
+}

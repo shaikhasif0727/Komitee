@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.android.komiteebicicycle.core.utils.getMonthsForBici
 
 @Composable
 fun BiciDetailsScreen(
@@ -80,7 +81,7 @@ fun BiciDetailsScreen(
                 )
 
                 // Tabs for Months
-                val months = viewModel.getMonthsForBici(biciWithMembers.bici.startDate, biciWithMembers.bici.endDate)
+                val months = getMonthsForBici(biciWithMembers.bici.startDate, biciWithMembers.bici.endDate)
                 ScrollableTabRow(selectedTabIndex = currentMonthIndex.value) {
                     months.forEachIndexed { index, month ->
                         Tab(
@@ -103,8 +104,9 @@ fun BiciDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     selectedMonthContributions.forEach { contribution ->
+                        val member = state.getMemberById(contribution.memberId)
                         MemberPaymentRow(
-                            member = state.getMemberById(contribution.memberId),
+                            member = member,
                             contribution = contribution,
                             onUpdate = { method, isPaid ->
                                 viewModel.updateContribution(contribution, method, isPaid)

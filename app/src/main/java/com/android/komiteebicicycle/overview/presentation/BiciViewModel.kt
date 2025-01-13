@@ -1,12 +1,15 @@
 package com.android.komiteebicicycle.overview.presentation
 
 import androidx.lifecycle.viewModelScope
+import com.android.komiteebicicycle.contribution.data.model.Contribution
 import com.android.komiteebicicycle.core.room.dao.BiciDao
 import com.android.komiteebicicycle.core.room.dao.MemberDao
 import com.android.komiteebicicycle.core.naviagtion.Destination
 import com.android.komiteebicicycle.core.naviagtion.Navigator
 import com.android.komiteebicicycle.core.room.dao.BiciMemberCrossRef
+import com.android.komiteebicicycle.core.room.dao.ContributionDao
 import com.android.komiteebicicycle.core.room.model.BiciWithMembers
+import com.android.komiteebicicycle.core.utils.getMonthsForBici
 import com.android.komiteebicicycle.member.data.model.Member
 import com.android.komiteebicicycle.overview.data.model.Bici
 import com.si.f1.f1predictor.core.common.BaseViewModel
@@ -21,6 +24,7 @@ import javax.inject.Inject
 class BiciViewModel @Inject constructor(
     private val biciDao: BiciDao,
     private val memberDao: MemberDao,
+    private val contributionDao: ContributionDao,
     private val navigator: Navigator
 ) : BaseViewModel<BiciContract.Event, BiciContract.State, BiciContract.Effect>() {
     init {
@@ -73,7 +77,42 @@ class BiciViewModel @Inject constructor(
                 )
             }
 
+            addContribution(
+                biciId = biciId.toInt(),
+                startDate = startDate,
+                endDate = endDate,
+                members = members,
+                totalAmount = totalAmount
+            )
+
             getBiciWithMembers()
+        }
+    }
+
+    private fun addContribution(
+        biciId: Int,
+        startDate: String,
+        endDate: String,
+        members: List<Member>,
+        totalAmount: Double
+    ) {
+        viewModelScope.launch {
+            val months = getMonthsForBici(startDate, endDate)
+            val memberCount = members.size
+            val amountPerMember = totalAmount / memberCount
+
+            months.forEach { month ->
+                // Create contributions for all members if not present
+                val newContributions = members.map { member ->
+                    Contribution(
+                        biciId = biciId,
+                        memberId = member.memberId,
+                        month = month,
+                        amount = amountPerMember
+                    )
+                }
+                newContributions.forEach { contributionDao.insertContribution(it) }
+            }
         }
     }
 

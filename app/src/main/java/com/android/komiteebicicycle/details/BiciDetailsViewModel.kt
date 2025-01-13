@@ -7,6 +7,7 @@ import com.android.komiteebicicycle.core.room.dao.BiciDao
 import com.android.komiteebicicycle.core.room.dao.ContributionDao
 import com.android.komiteebicicycle.core.room.dao.MemberDao
 import com.android.komiteebicicycle.core.room.model.BiciWithMembers
+import com.android.komiteebicicycle.core.utils.getMonthsForBici
 import com.si.f1.f1predictor.core.common.BaseViewModel
 import com.si.f1.f1predictor.core.common.UiEffect
 import com.si.f1.f1predictor.core.common.UiEvent
@@ -23,7 +24,7 @@ class BiciDetailsViewModel @Inject constructor(
     private val biciDao: BiciDao,
     private val contributionDao: ContributionDao,
     private val memberDao: MemberDao
-) : BaseViewModel<BiciDetailsContract.Event,BiciDetailsContract.State,BiciDetailsContract.Effect>() {
+) : BaseViewModel<BiciDetailsContract.Event, BiciDetailsContract.State, BiciDetailsContract.Effect>() {
 
     private val _contributionsByMonth = mutableStateMapOf<String, List<Contribution>>()
     val contributionsByMonth: Map<String, List<Contribution>> get() = _contributionsByMonth
@@ -44,7 +45,8 @@ class BiciDetailsViewModel @Inject constructor(
                 val amountPerMember = details.bici.totalAmount / memberCount
 
                 months.forEach { month ->
-                    val contributions = contributionDao.getContributionsByBiciAndMonth(biciId, month)
+                    val contributions =
+                        contributionDao.getContributionsByBiciAndMonth(biciId, month)
                     _contributionsByMonth[month] = contributions.ifEmpty {
                         // Create contributions for all members if not present
                         val newContributions = details.members.map { member ->
@@ -56,7 +58,7 @@ class BiciDetailsViewModel @Inject constructor(
                             )
                         }
                         newContributions.forEach { contributionDao.insertContribution(it) }
-                        newContributions
+                        contributionDao.getContributionsByBiciAndMonth(biciId, month)
                     }
                 }
             }
@@ -65,30 +67,18 @@ class BiciDetailsViewModel @Inject constructor(
 
     fun updateContribution(contribution: Contribution, paymentMethod: String, isPaid: Boolean) {
         viewModelScope.launch {
-            val updatedContribution = contribution.copy(paymentMethod = paymentMethod, isPaid = isPaid)
+            val updatedContribution =
+                contribution.copy(paymentMethod = paymentMethod, isPaid = isPaid)
             contributionDao.updateContribution(updatedContribution)
 
             // Update in memory
-            _contributionsByMonth[contribution.month] = _contributionsByMonth[contribution.month]
-                ?.map { if (it.id == contribution.id) updatedContribution else it }
+            _contributionsByMonth[contribution.month] = _contributionsByMonth[contribution.month]?.map {
+                    if (it.id == contribution.id)
+                        updatedContribution
+                    else it
+                }
                 ?: listOf(updatedContribution)
         }
-    }
-
-    fun getMonthsForBici(startDate: String, endDate: String): List<String> {
-        val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
-        val start = dateFormat.parse(startDate)
-        val end = dateFormat.parse(endDate)
-
-        val calendar = Calendar.getInstance()
-        calendar.time = start
-
-        val months = mutableListOf<String>()
-        while (calendar.time.before(end) || calendar.time == end) {
-            months.add(dateFormat.format(calendar.time))
-            calendar.add(Calendar.MONTH, 1)
-        }
-        return months
     }
 
     override fun createInitialState(): BiciDetailsContract.State {
@@ -96,25 +86,25 @@ class BiciDetailsViewModel @Inject constructor(
     }
 
     override fun handleEvent(event: BiciDetailsContract.Event) {
-        when(event){
+        when (event) {
 
             else -> {}
         }
     }
 }
 
-class BiciDetailsContract{
+class BiciDetailsContract {
 
-    sealed class Event:UiEvent
+    sealed class Event : UiEvent
 
     data class State(
-        val biciWithMembers:BiciWithMembers?= null,
-    ):UiState {
+        val biciWithMembers: BiciWithMembers? = null,
+    ) : UiState {
 
-        fun getMemberById(id:Int) = biciWithMembers?.members?.find { it.memberId == id }
+        fun getMemberById(id: Int) = biciWithMembers?.members?.find { it.memberId == id }
 
     }
 
-    sealed class Effect:UiEffect
+    sealed class Effect : UiEffect
 
 }
